@@ -1,0 +1,17 @@
+Package: BiocPkgSysReqs
+Title: Get the system requirements of the Bioconductor packages.
+Version: 0.99.0
+Authors@R:
+    person("Nitesh", "Turaga", role = c("aut","cre"),
+           email = "nturaga.bioc@gmail.com")
+Description: Retreive the system requirements of Bioconductor packages
+    which have CRAN packages as dependencies. The package can be used
+    to know which system requirements to install for each Biconductor
+    package to be installed successfully.
+License: Artistic-2.0
+Encoding: UTF-8
+Depends: httr
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+
