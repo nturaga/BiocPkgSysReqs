@@ -1,3 +1,32 @@
+.bioc_software_packages <- function() {
+    available.packages(
+        repos = BiocManager::repositories()[["BioCsoft"]]
+    )
+}
+
+.cran_packages <- function() {
+    available.packages(repos = BiocManager::repositories()[["CRAN"]])
+}
+
+.db <- function() {
+    db <- available.packages(
+        repos = BiocManager::repositories()
+    )
+}
+
+.pkg_deps_all <-
+    function(bioc_software_packages, db)
+{
+    pkgs <- tools::package_dependencies(
+                       rownames(bioc_software_packages),
+                       db=db,
+                       which=c("Depends", "Suggests")
+                   )
+    pkgs
+}
+
+pkg_deps_all <- .pkg_deps_all(.bioc_software_packages(), .db()) 
+
 #' @rdname bioc_pkg_sys_reqs
 #'
 #' @description Get system requirements of Bioconductor package's
@@ -14,7 +43,7 @@
 #'
 #' @export
 bioc_pkg_sys_reqs <-
-    function(package_name)
+    function(package_name, pkg_deps_all, cran)
 {
     ## validity checks
     if(missing(package_name) || !.is_character(package_name)) {
@@ -22,36 +51,28 @@ bioc_pkg_sys_reqs <-
              "of Bioconductor package names.")
     }
     ## Get bioc packages
-    biocsoft <- available.packages(
-        repos = BiocManager::repositories()[["BioCsoft"]]
-    )
 
+    ## Get cran packages
+    
     ## Get database for package_dependencies
-    db <- available.packages(
-        repos = BiocManager::repositories()
-    )
-
+    
     ## Get package_dependencies of all bioc pkgs
-    pkgs <- tools::package_dependencies(
-                       rownames(biocsoft),
-                       db=db,
-                       which=c("Depends", "Suggests")
-                   )
+                
     ## Get all dependencies of packages
     all_deps <- unname(
-        unlist(pkgs[package_name])
+        unlist(pkg_deps_all[package_name])
     )
-
+    
     ## Get only cran dependencies
-    cran_deps <- all_deps[! all_deps %in% biocsoft]
-
-    ## Make tibble with resuls
+    cran_deps <- all_deps[all_deps %in% rownames(cran)]
+    
+    ## Make tibble with results
     result <- tibble(sysreqs = character())
     for (cran_pkg in cran_deps) {
         tbl <- rspm_get_package_sysreqs(package_name = cran_pkg)
         result <- bind_rows(result, tbl)
     }
-
+    
     result
 }
 # which(sapply(pkgs, function(x) "igraph" %in% x))

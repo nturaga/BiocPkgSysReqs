@@ -10,7 +10,7 @@ Description: Retreive the system requirements of Bioconductor packages
     package to be installed successfully.
 License: Artistic-2.0
 Encoding: UTF-8
-Collate: bioc_pkg_deps.R pkg_manager_api.R
+Collate: bioc_pkg_deps.R rspm_api.R
 Depends: httr
 LazyData: true
 Roxygen: list(markdown = TRUE)

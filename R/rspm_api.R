@@ -19,6 +19,7 @@ NULL
         query,
         accept("application/json")
     )
+    ## TODO: This fails when response is 400
     stop_for_status(response)
     content(response)
 }
