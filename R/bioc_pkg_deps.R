@@ -25,7 +25,8 @@
     pkgs
 }
 
-pkg_deps_all <- .pkg_deps_all(.bioc_software_packages(), .db()) 
+
+pkg_deps_all <- .pkg_deps_all(.bioc_software_packages(), .db())
 
 #' @rdname bioc_pkg_sys_reqs
 #'
@@ -53,26 +54,26 @@ bioc_pkg_sys_reqs <-
     ## Get bioc packages
 
     ## Get cran packages
-    
+
     ## Get database for package_dependencies
-    
+
     ## Get package_dependencies of all bioc pkgs
-                
+
     ## Get all dependencies of packages
     all_deps <- unname(
         unlist(pkg_deps_all[package_name])
     )
-    
+
     ## Get only cran dependencies
     cran_deps <- all_deps[all_deps %in% rownames(cran)]
-    
+
     ## Make tibble with results
     result <- tibble(sysreqs = character())
     for (cran_pkg in cran_deps) {
         tbl <- rspm_get_package_sysreqs(package_name = cran_pkg)
         result <- bind_rows(result, tbl)
     }
-    
+
     result
 }
 # which(sapply(pkgs, function(x) "igraph" %in% x))
